@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'goods',
+    'userapp',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +52,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'netshop.urls'
 
+# 全局上下文
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -63,6 +65,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'userapp.myContextProcessors.getUserInfo'
             ],
         },
     },
@@ -120,19 +123,38 @@ USE_TZ = True
 
 # 静态文件的访问目录
 STATIC_URL = '/static/'
-# 静态文件的存储目录
+# 静态文件的存储目录,进行映射，将static/css映射为static等
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static/css'),
     os.path.join(BASE_DIR, 'static/images'),
     os.path.join(BASE_DIR, 'static/js'),
 ]
-
+# 后台文件访问路径和存储路径
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-# 后台文件访问路径和存储路径
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# 将session存储与redis中
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        # 安装好redis后里面会有16个实例，0-15，端口后的1表示使用第二个实例数据库
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+# 名称要和CACHES中的key值要想等
+SESSION_CACHE_ALIAS = 'default'
+
+
+# 一是将SESSION_ENGINE设置为"django.contrib.sessions.backends.cache"，简单的对会话进行保存。
+# 但是这种方法不是很可靠，因为当缓存数据存满时将清除部分数据，或者遇到缓存服务器重启时数据将丢失。
+# 为了数据安全保障，可以将SESSION_ENGINE设置为"django.contrib.sessions.backends.cached_db"。
+# 这种方式在每次缓存的时候会同时将数据在数据库内写一份。当缓存不可用时，会话会从数据库内读取数据。
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'

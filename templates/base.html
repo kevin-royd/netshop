@@ -25,10 +25,13 @@
             <li class="sub"><a href="http://127.0.0.1:8000/?category=2#">客户服务</a></li>
             <li class="sub"><a href="http://127.0.0.1:8000/cart/cart.html">我的购物车</a></li>
         </ul>
-
-
-        <div class="register"><a href="http://127.0.0.1:8000/user/register">免费注册</a></div>
-        <div class="sign"><a href="http://127.0.0.1:8000/user/login">登录</a></div>
+        {#        判断session是否存在#}
+        {% if suser != None %}
+            <div class="register">欢迎<a href="/user/center/">{{ suer.uname }}</a></div>
+        {% else %}
+            <div class="register"><a href="/user/register">免费注册</a></div>
+            <div class="sign"><a href="/user/login">登录</a></div>
+        {% endif %}
 
 
     </div>
