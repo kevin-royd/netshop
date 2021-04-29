@@ -37,7 +37,7 @@
             $.get('/user/loadArea/', {'pid': pid}, function (result) {
                 // 数据类型为str 需要转换为json对象数组
                 var areaList = JSON.parse(result.jAreaList);
-                console.log(areaList);
+                //console.log(areaList);
                 for (var i = 0; i < areaList.length; i++) {
                     // 获取每一个area json对象
                     var area = areaList[i];
@@ -84,68 +84,26 @@
                 </div>
                 <hr>
                 <ul class="am-avg-sm-1 am-avg-md-3 am-thumbnails">
+                    {% for addrobj in addrList %}
+                        <li class="user-addresslist {% if addrobj.isdefault %}defaultAddr{% endif %} ">
+                            <span class="new-option-r"><i class="am-icon-check-circle"></i>默认地址</span>
+                            <p class="new-tit new-p-re">
+                                <span class="new-txt">{{ addrobj.aname }}</span>
+                                <span class="new-txt-rd2">{{ addrobj.aphone }}</span>
+                            </p>
+                            <div class="new-mu_l2a new-p-re">
+                                <p class="new-mu_l2cw">
+                                    <span class="street">{{ addrobj.addr }}</span>
+                                </p>
+                            </div>
+                            <div class="new-addr-btn">
+                                <a href="#"><i class="am-icon-edit"></i>编辑</a>
+                                <span class="new-addr-bar">|</span>
+                                <a href="javascript:void(0);" onclick="delClick(this);"><i class="am-icon-trash"></i>删除</a>
+                            </div>
+                        </li>
+                    {% endfor %}
 
-                    <li class="user-addresslist defaultAddr">
-                        <span class="new-option-r"><i class="am-icon-check-circle"></i>默认地址</span>
-                        <p class="new-tit new-p-re">
-                            <span class="new-txt">小叮当</span>
-                            <span class="new-txt-rd2">159****1622</span>
-                        </p>
-                        <div class="new-mu_l2a new-p-re">
-                            <p class="new-mu_l2cw">
-                                <span class="title">地址：</span>
-                                <span class="province">湖北</span>省
-                                <span class="city">武汉</span>市
-                                <span class="dist">洪山</span>区
-                                <span class="street">雄楚大道666号(中南财经政法大学)</span></p>
-                        </div>
-                        <div class="new-addr-btn">
-                            <a href="#"><i class="am-icon-edit"></i>编辑</a>
-                            <span class="new-addr-bar">|</span>
-                            <a href="javascript:void(0);" onclick="delClick(this);"><i class="am-icon-trash"></i>删除</a>
-                        </div>
-                    </li>
-
-                    <li class="user-addresslist">
-                        <span class="new-option-r"><i class="am-icon-check-circle"></i>设为默认</span>
-                        <p class="new-tit new-p-re">
-                            <span class="new-txt">小叮当</span>
-                            <span class="new-txt-rd2">159****1622</span>
-                        </p>
-                        <div class="new-mu_l2a new-p-re">
-                            <p class="new-mu_l2cw">
-                                <span class="title">地址：</span>
-                                <span class="province">湖北</span>省
-                                <span class="city">武汉</span>市
-                                <span class="dist">洪山</span>区
-                                <span class="street">雄楚大道666号(中南财经政法大学)</span></p>
-                        </div>
-                        <div class="new-addr-btn">
-                            <a href="#"><i class="am-icon-edit"></i>编辑</a>
-                            <span class="new-addr-bar">|</span>
-                            <a href="javascript:void(0);" onclick="delClick(this);"><i class="am-icon-trash"></i>删除</a>
-                        </div>
-                    </li>
-                    <li class="user-addresslist">
-                        <span class="new-option-r"><i class="am-icon-check-circle"></i>设为默认</span>
-                        <p class="new-tit new-p-re">
-                            <span class="new-txt">小叮当</span>
-                            <span class="new-txt-rd2">159****1622</span>
-                        </p>
-                        <div class="new-mu_l2a new-p-re">
-                            <p class="new-mu_l2cw">
-                                <span class="title">地址：</span>
-                                <span class="province">湖北</span>省
-                                <span class="city">武汉</span>市
-                                <span class="dist">洪山</span>区
-                                <span class="street">雄楚大道666号(中南财经政法大学)</span></p>
-                        </div>
-                        <div class="new-addr-btn">
-                            <a href="#"><i class="am-icon-edit"></i>编辑</a>
-                            <span class="new-addr-bar">|</span>
-                            <a href="javascript:void(0);" onclick="delClick(this);"><i class="am-icon-trash"></i>删除</a>
-                        </div>
-                    </li>
                 </ul>
                 <div class="clear"></div>
                 <a class="new-abtn-type" data-am-modal="{target: '#doc-modal-1', closeViaDimmer: 0}">添加新地址</a>
@@ -162,19 +120,19 @@
                         <hr>
 
                         <div class="am-u-md-12 am-u-lg-8" style="margin-top: 20px;">
-                            <form class="am-form am-form-horizontal">
-
+                            <form id="frm" class="am-form am-form-horizontal" method="post" action="/user/address/">
+                                {% csrf_token %}
                                 <div class="am-form-group">
                                     <label for="user-name" class="am-form-label">收货人</label>
                                     <div class="am-form-content">
-                                        <input type="text" id="user-name" placeholder="收货人">
+                                        <input type="text" id="user-name" name="aname" placeholder="收货人">
                                     </div>
                                 </div>
 
                                 <div class="am-form-group">
                                     <label for="user-phone" class="am-form-label">手机号码</label>
                                     <div class="am-form-content">
-                                        <input id="user-phone" placeholder="手机号必填" type="email">
+                                        <input id="user-phone" name="aphone" placeholder="手机号必填" type="text">
                                     </div>
                                 </div>
                                 <div class="am-form-group">
@@ -198,14 +156,17 @@
                                 <div class="am-form-group">
                                     <label for="user-intro" class="am-form-label">详细地址</label>
                                     <div class="am-form-content">
-                                        <textarea class="" rows="3" id="user-intro" placeholder="输入详细地址"></textarea>
+                                        {#                                        onfocus 获取焦点 把这个文本域做为对象进行传递#}
+                                        <textarea onfocus="fillContent(this)" name="addr" class="" rows="3"
+                                                  id="user-intro"
+                                                  placeholder="输入详细地址"></textarea>
                                         <small>100字以内写出你的详细地址...</small>
                                     </div>
                                 </div>
 
                                 <div class="am-form-group">
                                     <div class="am-u-sm-9 am-u-sm-push-3">
-                                        <a class="am-btn am-btn-danger">保存</a>
+                                        <a class="am-btn am-btn-danger" onclick="$('#frm').submit()">保存</a>
                                         <a href="javascript: void(0)" class="am-close am-btn am-btn-danger"
                                            data-am-modal-close="">取消</a>
                                     </div>
@@ -238,5 +199,18 @@
                 }
             })
         })
+
+        //获取文本域
+        function fillContent(textAreaObj) {
+            // 获取三级联动菜单中选中的内容
+            // 通过选择器获取select 下选中的option 中的selected属性 意思为匹配所有选中的option元素
+            var pro = $('#province option:selected').text();
+            var city = $('#city option:selected').text();
+            var town = $('#town option:selected').text();
+            //将菜单地址存放至文本地址中
+            var addr = pro + ' ' + city + ' ' + town;
+            //以html开头，element结尾就为js对象，object object就为jquery对象
+            $(textAreaObj).val(addr)
+        }
     </script>
 {% endblock %}

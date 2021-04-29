@@ -114,7 +114,22 @@ class CheckCodeView(View):
 
 class AddressView(View):
     def get(self, request):
-        return render(request, 'address.html')
+        user = request.session.get('user', '')
+        addrList = user.address_set.all()
+        return render(request, 'address.html', {'addrList': addrList})
+
+    def post(self, request):
+        # 获取请求参数
+        aname = request.POST.get('aname', '')
+        aphone = request.POST.get('aphone', '')
+        addr = request.POST.get('addr', '')
+        user = request.session.get('user', '')
+        # 插入数据库
+        Address.objects.create(aname=aname, aphone=aphone, addr=addr, userInfo=user,
+                               isdefault=(lambda count: True if count == 0 else False)(user.address_set.all().count()))
+        # 获取当前登录用户逇所有收货地址
+        addrList = user.address_set.all()
+        return render(request, 'address.html', {'addrList': addrList})
 
 
 class LoadAreaView(View):
@@ -122,7 +137,6 @@ class LoadAreaView(View):
     def get(self, request):
         pid = request.GET.get('pid', -1)
         pid = int(pid)
-        print('pid', pid)
         # 根据父id查询区划信息 父id和他上一级id是相等的，areaLevel1为最上级父id，id为0
         areaList = Area.objects.filter(parentid=pid)
         # 需要系列化
