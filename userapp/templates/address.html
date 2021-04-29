@@ -18,15 +18,37 @@
         });
 
         function loadProvince() {
-            loadArea('province', 0)
+            loadArea('province', 0, loadCity);
+        }
+
+        function loadCity() {
+            loadArea('city', $('#province').val(), loadTown);
+        }
+
+        function loadTown() {
+            loadArea('town', $('#city').val());
         }
 
         // 3个参数 selectId给哪一个下拉列表赋予新值，父id,是否下载下一项
         function loadArea(selectId, pid, nextLoad) {
+            // 将原有数据清空
+            $('#' + selectId).empty();
             //请求参数                                  回调函数
             $.get('/user/loadArea/', {'pid': pid}, function (result) {
-                alert(result.jAreaList)
-                alert(typeof result.jAreaList)
+                // 数据类型为str 需要转换为json对象数组
+                var areaList = JSON.parse(result.jAreaList);
+                console.log(areaList);
+                for (var i = 0; i < areaList.length; i++) {
+                    // 获取每一个area json对象
+                    var area = areaList[i];
+                    //console.log(area.pk)
+                    //console.log(area.fields.areaname)
+                    $('#' + selectId).append("<option value='" + area.pk + "'>" + area.fields.areaname + "</option>");
+                }
+                //判断是否需要加载下一集菜单
+                if (nextLoad != null) {
+                    nextLoad()
+                }
             });
         }
     </script>
@@ -158,11 +180,11 @@
                                 <div class="am-form-group">
                                     <label for="user-address" class="am-form-label">所在地</label>
                                     <div class="am-form-content address">
-                                        <select id="province">
+                                        <select id="province" onchange="loadCity();">
                                             <option value="a">浙江省</option>
                                             <option value="b" selected="">湖北省</option>
                                         </select>
-                                        <select id='city'>
+                                        <select id='city' onchange="loadTown();">
                                             <option value="a">温州市</option>
                                             <option value="b" selected="">武汉市</option>
                                         </select>

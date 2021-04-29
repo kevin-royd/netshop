@@ -125,9 +125,7 @@ class LoadAreaView(View):
         print('pid', pid)
         # 根据父id查询区划信息 父id和他上一级id是相等的，areaLevel1为最上级父id，id为0
         areaList = Area.objects.filter(parentid=pid)
-        print('areaList:', areaList)
         # 需要系列化
         jAreaList = serialize('json', areaList)
-        print('jAreaList:', jAreaList)
 
         return JsonResponse({'jAreaList': jAreaList})
