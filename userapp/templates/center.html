@@ -3,11 +3,12 @@
     个人中心
 {% endblock %}
 {% block main %}
+    {% csrf_token %}
     <div class="Bott">
         <div class="wrapper clearfix" style="margin: 0 auto">
             <div class="zuo fl" style="margin-left: 100px">
                 <h3>
-                    <a href="/"><img src="static/tx.png"></a>
+                    <a href="/"><img src="/static/tx.png"></a>
                     <p class="clearfix"><span class="fl">{{ suser.uname }}</span><span class="fr logout">[退出登录]</span>
                     </p>
                 </h3>
@@ -28,8 +29,8 @@
 
                 <div class="tx clearfix">
                     <div class="fl clearfix">
-                        <a href="/user/center/#" class="fl"><img src="/static/tx.png"></a>
-                        <p class="fl"><span>六六六</span><a href="http://127.0.0.1:8000/user/usercenter/#">修改个人信息&gt;</a>
+                        <a href="/"><img src="/static/tx.png"></a>
+                        <p class="fl"><span>六六六</span><a href="/user/center/#">修改个人信息&gt;</a>
                         </p>
                     </div>
                     <div class="fr">绑定邮箱：12****4@**.com</div>
@@ -65,8 +66,9 @@
             $.ajax({
                 type: 'post',
                 url: '/user/logout/',
+                // 获取隐藏域的值
                 data: 'csrfmiddlewaretoken=' + $('input[name="csrfmiddlewaretoken"]').val(),
-                success: function (data) {
+                success: function (result) {
                     window.location = '/user/login/'
                 }
             })

@@ -5,7 +5,7 @@ from django.db import models
 
 class Area(models.Model):
     areaid = models.IntegerField(primary_key=True)
-    areanae = models.CharField(max_length=50)
+    areaname = models.CharField(max_length=50)
     parentid = models.IntegerField()
     arealevel = models.IntegerField()
     status = models.IntegerField()
@@ -17,7 +17,7 @@ class Area(models.Model):
         db_table = 'area'
 
 
-class userInfo(models.Model):
+class UserInfo(models.Model):
     # 指定用户名为邮箱地址
     uname = models.EmailField(max_length=100)
     pwd = models.CharField(max_length=100)
@@ -33,7 +33,7 @@ class Address(models.Model):
     addr = models.CharField(max_length=100)
     # 是否为默认收货地址, 为布尔值，默认为false
     isdefault = models.BooleanField(default=False)
-    userInfo = models.ForeignKey(userInfo,on_delete=models.CASCADE)
+    userInfo = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
 
     def __unicode__(self):
         # 打印对象输出则为重写unicode方法

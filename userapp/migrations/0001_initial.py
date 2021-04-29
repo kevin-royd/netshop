@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='userInfo',
+            name='UserInfo',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('uname', models.EmailField(max_length=100)),
@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
                 ('aphone', models.CharField(max_length=11)),
                 ('addr', models.CharField(max_length=100)),
                 ('isdefault', models.BooleanField(default=False)),
-                ('userInfo', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='userapp.userinfo')),
+                ('UserInfo', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='userapp.userinfo')),
             ],
         ),
     ]
