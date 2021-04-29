@@ -54,6 +54,8 @@
                     async: false,
                     data: {'uname': username},
                     success: function (result) {
+                        // 如果用户名存在过一次，后续输入时都会显示用户名已存在,需要清空或重新赋值
+                        $('#aSpan').html('');
                         // 判断返回值
                         //alert(result.flag)
                         // 测试返回值类型
@@ -61,7 +63,7 @@
                         var cflag = result.flag;
                         if (cflag) {
                             flag = true;
-                            $('#aSpan').html('用户名已存在')
+                            $('#aSpan').html('用户名已存在');
                         }
 
                     }
@@ -84,7 +86,7 @@
                 return false;
             }
             hex_pwd = hex_md5(password);
-            $('#password').val(hex_pwd);
+            $('#pwd').val(hex_pwd);
             // 未定义时返回为undefined
             return true;
         }

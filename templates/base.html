@@ -15,7 +15,7 @@
     {% block headerjs %}{% endblock %}
 
 </head>
-<body>
+<body style="background: white;">
 
 <div class="head">
     <div class="head-in">
@@ -27,7 +27,7 @@
         </ul>
         {#        判断session是否存在#}
         {% if suser != None %}
-            <div class="register">欢迎<a href="/user/center/">{{ suer.uname }}</a></div>
+            <div class="register">欢迎<a href="/user/center/" style="color: red">{{ suser.uname }}</a></div>
         {% else %}
             <div class="register"><a href="/user/register">免费注册</a></div>
             <div class="sign"><a href="/user/login">登录</a></div>
@@ -36,7 +36,7 @@
 
     </div>
 </div>
-<div class="search">
+<div class="search" style="background: white;">
     <ul class="items">
         <li class="item">
             <a href="http://127.0.0.1:8000/?category=2#">
