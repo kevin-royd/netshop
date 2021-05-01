@@ -33,6 +33,7 @@
         <option value="$MODULE_DIR$/templates" />
         <option value="$MODULE_DIR$/goods/templates" />
         <option value="$MODULE_DIR$/userapp/templates" />
+        <option value="$MODULE_DIR$/cart/templates" />
       </list>
     </option>
   </component>
