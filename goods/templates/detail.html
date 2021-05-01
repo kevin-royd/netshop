@@ -43,7 +43,7 @@
                     <ul class="MinImgList">
                         {% for color in goods.getGColor %}
                             <li class="MinImg  {% if forloop.first %}active"
-                            {% endif %} colorid="13">
+                            {% endif %} colorid="{{ color.id }}">
                                 <img src="{{ color.colorurl }}" width="30px" height="30px">
                             </li>
                         {% endfor %}
@@ -70,30 +70,31 @@
                     <input type="number" name="" value="1">
                     <div class="jia">+</div>
                 </div>
-                <form action="http://127.0.0.1:8000/cart/" method="post">
+                <form action="/cart/" method="post">
                     <input name="colorid" type="hidden">
-                    <input name="goodsid" type="hidden" value="4">
+                    <input name="goodsid" type="hidden" value="{{ goods.id }}">
                     <input name="sizeid" type="hidden">
                     <input name="count" type="hidden">
-                    <input name="type" value="add" type="hidden">
-                    <input type="hidden" name="csrfmiddlewaretoken"
-                           value="QYciumFpuMt1tAzw4HyUsSbgralhP9ykf6fRRkLbNhqtrzI6FElzKnFZdIenh6pT">
+{#                    flag 当前行为 #}
+                    <input name="flag" value="add" type="hidden">
+                    {% csrf_token %}
+{#                    页面中的onclick优先级高于form表单的执行#}
                     <button class="male" onclick="goCart()">单独购买</button>
                 </form>
             </div>
             <div class="detail-con-nav">
                 <ul class="detail-nav">
-                    <li class="active nav-item "><a href="http://127.0.0.1:8000/goodsdetails/?goodsid=26#">商品详情</a></li>
-                    <li class="nav-item"><a href="http://127.0.0.1:8000/goodsdetails/?goodsid=26#">物流与售后</a></li>
-                    <li class="nav-item"><a href="http://127.0.0.1:8000/goodsdetails/?goodsid=26#">消费保障</a></li>
-                    <li class="nav-item"><a href="http://127.0.0.1:8000/goodsdetails/?goodsid=26#">手机购买</a></li>
+                    <li class="active nav-item "><a href="/goodsdetails/?goodsid=26#">商品详情</a></li>
+                    <li class="nav-item"><a href="/goodsdetails/?goodsid=26#">物流与售后</a></li>
+                    <li class="nav-item"><a href="/goodsdetails/?goodsid=26#">消费保障</a></li>
+                    <li class="nav-item"><a href="/goodsdetails/?goodsid=26#">手机购买</a></li>
                 </ul>
             </div>
             <div class="sub-nav">
                 <ul class="subNav">
-                    <li><a href="http://127.0.0.1:8000/goodsdetails/?goodsid=26#">整体款式</a></li>
-                    <li><a href="http://127.0.0.1:8000/goodsdetails/?goodsid=26#">模特实拍</a></li>
-                    <li><a href="http://127.0.0.1:8000/goodsdetails/?goodsid=26#">细节做工</a></li>
+                    <li><a href="/goodsdetails/?goodsid=26#">整体款式</a></li>
+                    <li><a href="/goodsdetails/?goodsid=26#">模特实拍</a></li>
+                    <li><a href="/goodsdetails/?goodsid=26#">细节做工</a></li>
                 </ul>
             </div>
             <div class="zhanshi">
@@ -173,8 +174,8 @@
         //单独购买
         //<input type="hidden" name="colorid" value=""/>
         function goCart() {
-
-            //<li class="MinImgactive" colorid="11"></li>
+            //$('form')标签选择器，获取页面中所有的form表单  children孩子选择器
+            // 获取所有的input框，多个隐藏域多个input框，在通过属性选择器name=''获取 attr获取属性
             $('form').children('input[name="colorid"]').val($('.MinImg.active').attr('colorid'))
             $('form').children('input[name="sizeid"]').val($('.size-item.active').attr('sizeid'))
             $('form').children('input[name="count"]').val($('.num').children('input[type="number"]').val())
