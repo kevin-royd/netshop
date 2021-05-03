@@ -93,14 +93,14 @@
     <script>
         $('.plus').click(function (event) {
             <!--将数据同步到服务器-->
-            var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val()
+            let csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val()
             {#这里的$(this)将js对象转化为jquery对象 并且表示+号的超链接，this谁调用就是谁#}
-            var goodsid = $(this).attr('goodsid')
-            var colorid = $(this).attr('colorid')
-            var sizeid = $(this).attr('sizeid')
+            let goodsid = $(this).attr('goodsid')
+            let colorid = $(this).attr('colorid')
+            let sizeid = $(this).attr('sizeid')
 
             // 将上面获取的数据放入对象当中
-            var data = {
+            let data = {
                 goodsid: goodsid,
                 colorid: colorid,
                 sizeid: sizeid,
@@ -130,12 +130,12 @@
                 event.stopImmediatePropagation()
                 return;
             }
-            var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val()
-            var goodsid = $(this).attr('goodsid')
-            var colorid = $(this).attr('colorid')
-            var sizeid = $(this).attr('sizeid')
+            let csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val()
+            let goodsid = $(this).attr('goodsid')
+            let colorid = $(this).attr('colorid')
+            let sizeid = $(this).attr('sizeid')
 
-            var data = {
+            let data = {
                 goodsid: goodsid,
                 colorid: colorid,
                 sizeid: sizeid,
@@ -160,25 +160,25 @@
             })
         })
         $('.delBtn').click(function () {
-            var goodsid = $(this).attr('goodsid');
-            var colorid = $(this).attr('colorid');
-            var sizeid = $(this).attr('sizeid');
+            let goodsid = $(this).attr('goodsid');
+            let colorid = $(this).attr('colorid');
+            let sizeid = $(this).attr('sizeid');
             $('.dialog-sure').attr('goodsid', goodsid).attr('colorid', colorid).attr('sizeid', sizeid)
         })
 
 
         $('.dialog-sure').click(function (event) {
-            var goodsid = $(this).attr('goodsid');
-            var colorid = $(this).attr('colorid');
-            var sizeid = $(this).attr('sizeid');
-            var csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+            let goodsid = $(this).attr('goodsid');
+            let colorid = $(this).attr('colorid');
+            let sizeid = $(this).attr('sizeid');
+            let csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
 
-            var data = {
+            let data = {
                 goodsid: goodsid,
                 colorid: colorid,
                 sizeid: sizeid,
                 csrfmiddlewaretoken: csrfmiddlewaretoken,
-                type: 'delete'
+                flag: 'delete'
             }
 
             $.ajax({
@@ -199,42 +199,34 @@
 
         //在购物车页面点击登录按钮后回转到购物车页面
         $('.sign > a').click(function (event) {
-
-            var link = $(this).attr('href')
-            $(this).attr('href', link + "?redirct=cart")
+            // 获取登录超链接的herf属性
+            let link = $(this).attr('href')
+            $(this).attr('href', link + "?redirect=cart")
         })
 
         //单击结算按钮
         $('#jiesuan').click(function () {
-
-
-            cks = $('.son_check')
-            var cartitem = []
+            // 类选择器 获取所有购物项前的复选框 得到一个数组
+            let cks = $('.son_check');
+            let cartitem = []
+            // 匿名函数中index表示数组下标，ck表示每一个对象
             $.each(cks, function (index, ck) {
+                // prop 类似attr 获取属性的值
                 if ($(ck).prop('checked')) {
-                    var goodsid = $(ck).parents('.order_lists').attr('goodsid')
-                    var sizeid = $(ck).parents('.order_lists').attr('sizeid')
-                    var colorid = $(ck).parents('.order_lists').attr('colorid')
-
-
+                    let goodsid = $(ck).parents('.order_lists').attr('goodsid')
+                    let sizeid = $(ck).parents('.order_lists').attr('sizeid')
+                    let colorid = $(ck).parents('.order_lists').attr('colorid')
+                    // push 类型install插入 json.stringify 将json对象转化为json字符串
                     cartitem.push(JSON.stringify({'goodsid': goodsid, 'sizeid': sizeid, 'colorid': colorid}))
-
-
                 }
             })
-
-
+            // 判断数组的长度
             if (cartitem.length == 0) {
                 return;
             }
-
-
-            var url = '/order/?cartitems=' + cartitem;
+            let url = '/order/?cartitems=' + cartitem;
             $(this).attr('href', url);
-
-
         })
-
     </script>
 
 {% endblock %}

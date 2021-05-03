@@ -29,9 +29,9 @@
                         {#                        为了隐藏验证为后台生成的可以将路径进行伪装将loadCode改为loadCode.png#}
                         <img src="/user/loadCode.png" onclick="changeCode(this)"><span style="color:red;"
                                                                                        id="cSpan"></span>
-
-                        <input type="hidden" name="redirect" value="">
-                        <input type="hidden" name="cartitems" value="None">
+{#                        完成的登记 上一个页面是那个页面#}
+                        <input type="hidden" id="redi" name="redirect" value="{{ redirect }}">
+                        <input type="hidden" name="cartitems" value="{{ cartitems }}">
 
                         <button class="login-btn" style="color: white;text-decoration: none;cursor: pointer">登录</button>
                     </div>
