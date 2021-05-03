@@ -1,4 +1,3 @@
-from django.urls import path
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views import View
 from .cartmanager import *
@@ -11,6 +10,8 @@ class AddCartView(View):
         # print(request.POST)
         # 转换为普通子弹
         # print(request.POST.dict())
+        # 在多级字典数据的时候，需要手动设置modified=true ，实时的将数据存入到session对象中
+        request.session.modified = True
         # 1.获取flag 判断操作类型
         flag = request.POST.get('flag', '')
         # 2.判断flag操作
@@ -27,6 +28,11 @@ class AddCartView(View):
             carManagerObj = getCartManger(request)
             # 修改商品的数量(减少)
             carManagerObj.update(step=-1, **request.POST.dict())
+        elif flag == 'delete':
+            carManagerObj = getCartManger(request)
+            # 删除为逻辑删除购物车选项 delete方法中需要的三个参数在发送的ajax json对象中都有
+            carManagerObj.delete(**request.POST.dict())
+
         return HttpResponseRedirect('/cart/queryAll/')
 
 

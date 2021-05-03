@@ -31,4 +31,4 @@ class CartItem(models.Model):
     def getTotalPrice(self):
         import math
         # 向上取整
-        return math.ceil(float(self.getGoods().price * self.count))
+        return math.ceil(float(self.getGoods().price) * float(self.count))

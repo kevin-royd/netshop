@@ -4,6 +4,7 @@ from userapp.models import *
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from utils.code import *
 from django.core.serializers import serialize
+from cart.cartmanager import SessionCartManager
 
 
 # Create your views here.
@@ -68,7 +69,9 @@ class LoginView(View):
         # 判断用户是否已经登录过
         if 'user' in request.session:
             return render(request, 'center.html')
-        return render(request, 'login.html')
+        # 获取请求参数
+        redirect = request.GET.get('redirect', '')
+        return render(request, 'login.html', {'redirect': redirect})
 
     def post(self, request):
         # 获取请求参数
@@ -81,9 +84,17 @@ class LoginView(View):
         userList = UserInfo.objects.filter(uname=uname, pwd=pwd)
         print('userList', userList)
         if userList:
-            # 登录的用户只能有一个
-            print('user', userList[0])
+            # 用户未登录在购物车界面点击登录跳转登录界面，并且记录上一个页面是什么页面
+            # 登录完成后跳转登录页面的上个页面
             request.session['user'] = userList[0]
+            redirect = request.POST.get('redirect', '')
+            print('login页面跳出red', redirect)
+            if redirect == 'cart':
+                # 将session中的购物项移动到数据库 并且回到购物车界面
+                SessionCartManager(request.session).migrateSession2DB()
+                return HttpResponseRedirect('/cart/queryAll/')
+            elif redirect == 'order':
+                return HttpResponseRedirect('/order/order.html?cartitems=' + request.POST.get('cartitems', ''))
             return HttpResponseRedirect('/user/center/')
         return HttpResponseRedirect('/user/login/')
 
