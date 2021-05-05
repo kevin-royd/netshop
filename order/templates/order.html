@@ -51,7 +51,8 @@
                     <h3>订单内容</h3>
                     <!--------ul---------------->
                     {% for cm in cartitemObjList %}
-                        <ul class="clearfix" goodsid="{{ cm.goodsid }}" sizeid="{{ cm.sizeid }}" colorid="{{ cm.colorid }}" count="{{ cm.count }}">
+                        <ul class="clearfix" goodsid="{{ cm.goodsid }}" sizeid="{{ cm.sizeid }}"
+                            colorid="{{ cm.colorid }}" count="{{ cm.count }}">
                             <li class="fl">
                                 <img src="{{ cm.getGoods.getGIma }}" width="87px" height="87px">
                             </li>
@@ -73,10 +74,10 @@
                 </div>
                 <!--------tips count---------------->
                 <div class="count tips">
-                    <p><span class="fl">合计：</span><span class="fr">￥{{ totalPrice }}</span></p>
+                    <p><span class="fl">合计：</span><span class="fr" id="totalPrice">￥{{ totalPrice }}</span></p>
                 </div>
                 <!--<input type="button" name="" value="去支付"> -->
-                <a href="http://127.0.0.1:8000/order/order.html" id="pay" class="pay"
+                <a href="/order/order.html" id="pay" class="pay"
                    onclick="javascript:void(0);">去支付</a>
             </div>
         </div>
@@ -91,7 +92,9 @@
 
     <script>
         $("#pay").click(function () {
-            var cartitems = []
+            // 创建数组 用于存放当前需要购买的商品id json格式对象
+            let cartitems = []
+            // class选择器 获取所有的msg下的ul标签
             $.each($('.msg ul'), function (index, item) {
                 cartitems.push({
                     "goodsid": $(item).attr('goodsid'),
@@ -101,9 +104,9 @@
                 })
             })
             //拼接请求参数
-            var params = 'address=1&payway=' + $('.way .on').attr('name') + '&cartitems=' + JSON.stringify(cartitems)
+            let params = 'address={{ address.id }}&payway=' + $('.way .on').attr('name') + '&cartitems=' + JSON.stringify(cartitems) + '&totalPrice=' + $('#totalPrice').html()
             //拼接请求地址
-            var url = '/order/toorder/?' + params
+            let url = '/order/topay/?' + params
             $(this).attr('href', url)
         })
     </script>
